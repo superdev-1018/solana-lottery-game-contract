@@ -61,7 +61,7 @@ pub fn add_referral_user(ctx: Context<AddReferralUser>) -> Result<()> {
     let referral_user = &mut ctx.accounts.referral_user;
     referrer.referral_list.push(ctx.accounts.buyer.key());
 
-    require!((lottery.state) !=2, ContractError::LotteryEnded);
+    require!((lottery.state) !=1, ContractError::LotteryEnded);
     let max_tickets: usize = lottery.max_ticket.try_into().unwrap();
     require!(
         !lottery.participants.contains(ctx.accounts.buyer.key),
@@ -73,7 +73,7 @@ pub fn add_referral_user(ctx: Context<AddReferralUser>) -> Result<()> {
         ContractError::LotteryAlreadyFulled
     );
 
-    let transfer_amount = (lottery.ticket_price as u64) * 1_000_000_000u64;
+    let transfer_amount = lottery.ticket_price as u64;
 
     let transfer_instruction = Transfer {
         from: ctx.accounts.buyer_token_account.to_account_info(),

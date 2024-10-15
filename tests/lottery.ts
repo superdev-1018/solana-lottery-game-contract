@@ -60,32 +60,32 @@ describe("lottery", async() => {
       // });
       const globalAccount = await program.account.globalAccount.fetch(globalPDA);
     //  console.log(globalAccount) 
-// if (globalAccount.isInitialized ==1){
-//     for (let i=0;i<10;i++){
-//           let lotteryPDA = get_pda([Buffer.from("LOTTERY_INFO_SEED"), initializer.publicKey.toBuffer(), new Uint8Array([i])], program.programId)
+if (globalAccount.isInitialized ==1){
+    for (let i=0;i<10;i++){
+          let lotteryPDA = get_pda([Buffer.from("LOTTERY_INFO_SEED"), initializer.publicKey.toBuffer(), new Uint8Array([i])], program.programId)
 
-//           let time_frame_index = i;
-//           await program.methods.createLottery(
-//             i,
-//             time_frame_index, 
-//             new BN(time_frame[i]),     
-//             ticket_price[i],           
-//             new BN(max_tickets[i]),
-//             dev_fees[i]  
-//           )
-//           .accounts({
-//             admin: initializer.publicKey,
-//             lottery: lotteryPDA,
-//             lotteryPdakeyInfo: lotteryKeyInfoPDA,
-//             systemProgram: web3.SystemProgram.programId
-//           })
-//           .signers([initializer])
-//           .rpc()
-//           .catch((error)=>{console.log(error)});
-//         }
-//       }
-//       let lotteryList = await program.account.lottery.all();
-//       console.log(lotteryList,"lottery LIst");
+          let time_frame_index = i;
+          await program.methods.createLottery(
+            i,
+            time_frame_index, 
+            new BN(time_frame[i]),     
+            ticket_price[i],           
+            new BN(max_tickets[i]),
+            dev_fees[i]  
+          )
+          .accounts({
+            admin: initializer.publicKey,
+            lottery: lotteryPDA,
+            lotteryPdakeyInfo: lotteryKeyInfoPDA,
+            systemProgram: web3.SystemProgram.programId
+          })
+          .signers([initializer])
+          .rpc()
+          .catch((error)=>{console.log(error)});
+        }
+      }
+      let lotteryList = await program.account.lottery.all();
+      console.log(lotteryList,"lottery LIst");
 /********* Buy Ticket  **********/
 // const buyer1 = loadKeypairFromFile("/home/odmin/test_key_2.json");  
 // let lotteryOnePDA = get_pda([Buffer.from("LOTTERY_INFO_SEED"), initializer.publicKey.toBuffer(), new Uint8Array([5])], program.programId);

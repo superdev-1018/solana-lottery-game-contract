@@ -2,6 +2,8 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount};
 pub use crate::{account::*, constant::*, error::*};
 use oorandom::Rand64;
+use std::collections::HashSet;
+use std::convert::TryInto;
 
 #[derive(Accounts)]
 #[instruction(id: u8)]
@@ -82,21 +84,40 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
     let lottery =&mut ctx.accounts.lottery;
     let participants = lottery.participants.len();
     let max_tickets: usize = lottery.max_ticket.try_into().unwrap();
-    let is_in_progress = lottery.state == 1;
+    let is_in_progress = lottery.state == 0;
 
-    require!(is_in_progress, ContractError::LotteryNotStarted);
+    // require!(is_in_progress, ContractError::LotteryNotStarted);
     require!(participants > 3, ContractError::NotEnoughParticipants);
-    require!(lottery.winner.len() == 0, ContractError::LotteryAlreadyEnded);
+    // require!(lottery.winner.len() == 0, ContractError::LotteryAlreadyEnded);
+    // require!(!lottery.winner.contains(ctx.accounts.system_program.key), ContractError::LotteryNotStarted);
 
-    let unique_numbers = [0,1,2];
+    let mut unique_numbers = HashSet::new();
+    let current_time: u128 = Clock::get().unwrap().unix_timestamp as u128;
+    let mut rng1 = Rand64::new(current_time); 
 
-    for i in 0..3 {
-        let current_time: u128 = Clock::get().unwrap().unix_timestamp as u128;
-        let mut rng1: Rand64 = Rand64::new(current_time);
-        let winner_index: usize = rng1.rand_range(0..(participants as u64 -1) ).try_into().unwrap();
+    while unique_numbers.len() < 3 {
+        let winner_index: usize = rng1.rand_range(0..participants as u64).try_into().unwrap();
+        unique_numbers.insert(winner_index); 
     }
 
-    let winner_list: [u8; 3] = unique_numbers;
+    let unique_numbers_vec: Vec<usize> = unique_numbers.into_iter().collect();
+    let winner_list: [u8; 3];
+
+    if unique_numbers_vec.len() == 3 {
+        // Convert from Vec<usize> to [u8; 3]
+        let unique_array: [u8; 3] = unique_numbers_vec
+            .iter()
+            .map(|&x| x as u8) // Convert usize to u8
+            .collect::<Vec<u8>>() 
+            .try_into() 
+            .expect("Expected exactly 3 unique numbers");
+
+        winner_list = unique_array; 
+        msg!("Winners: {:?}", winner_list);
+    } else {
+        panic!("Not enough unique numbers generated");
+    }
+
 
     // Collect winners' pubkeys
     let winners: Vec<Pubkey> = winner_list
@@ -132,7 +153,7 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
     let winner3_prize = lottery_pool_amount * 20/100 as u64;
 
     lottery.winner_prize = [winner1_prize, winner2_prize, winner3_prize];
-    lottery.state = 2;
+    lottery.state = 1;
 
     Ok(())
 }

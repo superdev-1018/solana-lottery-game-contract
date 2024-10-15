@@ -1,5 +1,6 @@
 use anchor_lang::prelude::*;
 pub use crate::error::*;
+use crate::MAX_PLAYERS;
 
 #[account]
 #[derive(Default)]
@@ -52,6 +53,10 @@ pub struct Lottery{
     pub real_pool_amount: u64,
     pub real_count: u32,
     pub round: u32
+}
+
+impl Lottery {
+    pub const SIZE: usize = 202 + 32 * MAX_PLAYERS;
 }
 
 #[account]

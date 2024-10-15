@@ -9,3 +9,4 @@ pub const USER_INFO:&[u8] = b"USER_INFO_SEED";
 pub const HISTORY_INFO:&[u8] = b"HISTORY_INFO_SEED";
 
 pub const MAX_ACCOUNT_SPACE: usize = 1000;
+pub const MAX_PLAYERS: usize = 300;

@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("XAoj6AeoTAyE2ALe2MEVw36Hy1GryJoPjoyfxCAdbL7");
+declare_id!("GnUspD1yjkreCUDsBu6n3ow9ARZ3QMBgGcBrNeQmHx9z");
 
 pub mod constant;
 pub mod error;
@@ -55,9 +55,9 @@ pub mod lottery {
       user::get_user_ticket_num(ctx)
     }
 
-    pub fn join_lottery(ctx: Context<JoinLottery>) -> Result<()> {
+    pub fn join_lottery(ctx: Context<JoinLottery>, user_spot_index: u8) -> Result<()> {
       msg!("join lottery {}", "id");
-      lottery::join_to_lottery(ctx)
+      lottery::join_to_lottery(ctx, user_spot_index)
     } 
 
 }

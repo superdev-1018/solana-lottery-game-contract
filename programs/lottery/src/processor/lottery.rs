@@ -15,7 +15,7 @@ pub struct CreateLottery<'info> {
         payer = admin,
         seeds = [LOTTERY_INFO, admin.key().as_ref(), &id.to_le_bytes()],
         bump,
-        space = 8 + std::mem::size_of::<Lottery>() 
+        space = 8 + Lottery::SIZE 
     )]
     pub lottery: Box<Account<'info, Lottery>>,
 
@@ -50,6 +50,8 @@ pub struct JoinLottery<'info> {
 
     #[account(mut)]
     pub user: Box<Account<'info, User>>,
+
+    pub system_program: Program<'info, System>,
 }
 
 
@@ -159,11 +161,11 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
 }
 
 
-pub fn join_to_lottery(ctx: Context<JoinLottery>) -> Result<()> {
+pub fn join_to_lottery(ctx: Context<JoinLottery>, user_spot_index:u8) -> Result<()> {
     let user = &mut ctx.accounts.user;
     let lottery = &mut ctx.accounts.lottery;
 
-    require!((lottery.state) !=2, ContractError::LotteryEnded);
+    require!((lottery.state) !=1, ContractError::LotteryEnded);
     let max_tickets: usize = lottery.max_ticket.try_into().unwrap();
 
      require!(
@@ -176,11 +178,12 @@ pub fn join_to_lottery(ctx: Context<JoinLottery>) -> Result<()> {
         ContractError::LotteryAlreadyFulled
     );
 
-    let real_count = lottery.real_count;
+    lottery.real_count += 1;
 
     let transfer_amount = lottery.ticket_price as u64;
-    lottery.participants[real_count as usize] = user.id;
+    lottery.participants.push(user.id);
     lottery.real_pool_amount += transfer_amount; 
+    user.spot[user_spot_index as usize] -= 1;
 
     Ok(())
 }

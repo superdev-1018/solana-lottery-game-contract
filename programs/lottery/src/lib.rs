@@ -58,7 +58,7 @@ pub mod lottery {
     pub fn join_lottery(ctx: Context<JoinLottery>) -> Result<()> {
       msg!("join lottery {}", "id");
       lottery::join_to_lottery(ctx)
-    }
+    } 
 
 }
 

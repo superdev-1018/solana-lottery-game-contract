@@ -86,10 +86,10 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
     let max_tickets: usize = lottery.max_ticket.try_into().unwrap();
     let is_in_progress = lottery.state == 0;
 
-    // require!(is_in_progress, ContractError::LotteryNotStarted);
+    require!(is_in_progress, ContractError::LotteryNotStarted);
     require!(participants > 3, ContractError::NotEnoughParticipants);
     // require!(lottery.winner.len() == 0, ContractError::LotteryAlreadyEnded);
-    // require!(!lottery.winner.contains(ctx.accounts.system_program.key), ContractError::LotteryNotStarted);
+    require!(!lottery.winner.contains(ctx.accounts.system_program.key), ContractError::LotteryNotStarted);
 
     let mut unique_numbers = HashSet::new();
     let current_time: u128 = Clock::get().unwrap().unix_timestamp as u128;

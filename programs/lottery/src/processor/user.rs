@@ -78,7 +78,7 @@ pub fn getticket(ctx: Context<BuyTicket>, count:u8) -> Result<()> {
     //     return Ok(());
     // }
 
-    let transfer_amount = (lottery.ticket_price as u64) * (count as u64); 
+    let transfer_amount = (lottery.ticket_price as u64) * (count as u64) * 1_000_000_000u64; 
     msg!("transfer token amount {}", transfer_amount);
     // let bump = ctx.bumps.global_account;
     // let seeds = &[CONFIG_TAG.as_ref(), &[bump]];

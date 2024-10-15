@@ -30,4 +30,6 @@ pub enum ContractError {
     NotEnoughParticipants,
     #[msg("Invalid User Account")]
     InvalidUserAccount,
+    #[msg("Lottery is in progress")]
+    StillInProgress,
 }

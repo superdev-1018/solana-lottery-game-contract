@@ -45,7 +45,7 @@ pub struct Lottery{
     pub start_time: i64,
     pub end_time: i64,
     pub state: u8,
-    pub participants: [Pubkey; 60],
+    pub participants: Vec<Pubkey>,
     pub winner: [Pubkey; 3],
     pub prize_percent: [u8; 3],
     pub winner_prize:[u64;3],

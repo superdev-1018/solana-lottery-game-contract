@@ -39,8 +39,13 @@ pub struct EndLottery<'info> {
     #[account(mut)]
     pub tax_token_account: Box<Account<'info, TokenAccount>>,
 
+    #[account(mut)]
+    pub winner_ticker: Box<Account<'info, WinnerTicker>>,
+
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
+
+
 }
 
 #[derive(Accounts)]
@@ -91,7 +96,7 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
     require!(is_in_progress, ContractError::LotteryNotStarted);
     require!(participants > 3, ContractError::NotEnoughParticipants);
     // require!(lottery.winner.len() == 0, ContractError::LotteryAlreadyEnded);
-    require!(!lottery.winner.contains(ctx.accounts.system_program.key), ContractError::LotteryNotStarted);
+    require!(!lottery.participants.contains(ctx.accounts.system_program.key), ContractError::LotteryNotStarted);
 
     let mut unique_numbers = HashSet::new();
     let current_time: u128 = Clock::get().unwrap().unix_timestamp as u128;
@@ -131,12 +136,12 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
     let winner2 = winners[1];
     let winner3 = winners[2];
     lottery.winner = [winner1, winner2, winner3];
-
+    msg!("winner list {}, {}, {}", winner1, winner2, winner3);
     // Calculate tax fee and update pool amount
     let lottery_pool_amount = lottery.real_pool_amount;
-    let tax_fee = (lottery_pool_amount * 10 / 100) as u64;
+    let tax_fee = lottery_pool_amount * 10 / 100;
     lottery.real_pool_amount -= tax_fee;
-
+    msg!("tax fee amount is {}", tax_fee);
     // Transfer the tax fee
     token::transfer(
         CpiContext::new(
@@ -156,6 +161,11 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
 
     lottery.winner_prize = [winner1_prize, winner2_prize, winner3_prize];
     lottery.state = 1;
+
+    let winner_ticker = &mut ctx.accounts.winner_ticker;
+    winner_ticker.winner = winner1;
+    winner_ticker.prize = lottery.real_pool_amount * 50;
+    winner_ticker.time_frame = lottery.time_frame;
 
     Ok(())
 }

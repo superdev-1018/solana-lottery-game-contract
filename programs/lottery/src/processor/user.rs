@@ -30,6 +30,9 @@ pub struct BuyTicket<'info> {
     #[account(mut)]
     pub lottery: Box<Account<'info, Lottery>>,
 
+    #[account(mut)]
+    pub deposite_ticker: Box<Account<'info, DepositeTicker>>,
+
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
 }
@@ -114,6 +117,12 @@ pub fn getticket(ctx: Context<BuyTicket>, count:u8) -> Result<()> {
     if let Some(index) = time_frames.iter().position(|&timeframe| timeframe == lottery_timeframe) {
         user.spot[index] += count;
     }
+
+    let deposite_ticker = &mut ctx.accounts.deposite_ticker;
+    deposite_ticker.depositer = buyer.key();
+    deposite_ticker.time_frame = lottery.time_frame;
+    deposite_ticker.spots = count;
+    deposite_ticker.amount = (lottery.ticket_price * count) as u64;
     
     Ok(()) 
 }

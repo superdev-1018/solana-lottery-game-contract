@@ -24,6 +24,24 @@ pub struct Initialize<'info> {
     )]
     pub lottery_pdakey_info: Box<Account<'info, LotteryPdaInfo>>,
 
+    #[account(
+        init_if_needed,
+        payer= initializer, 
+        seeds=[WINNER_TICKER],
+        bump,
+        space= 8 + std::mem::size_of::<WinnerTicker>()
+    )]
+    pub winner_ticker: Box<Account<'info, WinnerTicker>>,
+
+    #[account(
+        init_if_needed, 
+        payer= initializer, 
+        seeds=[DEPOSITE_TICKER], 
+        bump, 
+        space= 8 + std::mem::size_of::<DepositeTicker>()
+    )]
+    pub deposite_ticker: Box<Account<'info, DepositeTicker>>,
+
     #[account(mut)]
     pub pool_token_account: Account<'info, TokenAccount>,
 

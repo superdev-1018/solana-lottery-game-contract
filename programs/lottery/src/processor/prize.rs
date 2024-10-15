@@ -30,9 +30,9 @@ pub fn send_prize(ctx: Context<PrizeDistribute>) -> Result<()> {
 
     let lottery = &mut ctx.accounts.lottery;
 
-    let winner1_prize = lottery.winner_prize[0];
-    let winner2_prize = lottery.winner_prize[1];
-    let winner3_prize = lottery.winner_prize[2];
+    let winner1_prize = lottery.winner_prize[0] * 1_000_000_000u64;
+    let winner2_prize = lottery.winner_prize[1] * 1_000_000_000u64;
+    let winner3_prize = lottery.winner_prize[2] * 1_000_000_000u64;
 
     token::transfer(
         CpiContext::new(

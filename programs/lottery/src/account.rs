@@ -11,11 +11,6 @@ pub struct GlobalAccount {
     pub withdraw_token_account: Pubkey
 }
 
-// #[account]
-// pub struct PoolAccount {
-//     pub pool_token_accounts: [Pubkey; 10]
-// }
-
 #[account]
 pub struct User {
     pub id: Pubkey,
@@ -25,16 +20,6 @@ pub struct User {
     pub referral_list: Vec<Pubkey>,
 }
 
-// #[account]
-// pub struct UserList {
-//     pub users: [User;10],
-//     pub count: u8,
-// }
-
-// #[account]
-// pub struct LotteryList {
-//     pub lotterys: [Lottery; 10],
-// }
 
 #[account]
 pub struct Lottery{
@@ -65,37 +50,20 @@ pub struct LotteryPdaInfo {
     pub rounds: [u8;10]
 }
 
+#[account]
+pub struct WinnerTicker {
+    pub winner: Pubkey,
+    pub time_frame: u64,
+    pub prize: u64 
+}
 
-// #[account]
-// pub struct HistoryList{
-//     pub histories: [History;10],
-// }
-
-// #[derive(Default, Clone, AnchorSerialize, AnchorDeserialize)]
-// pub struct History {
-//     pub lottery_type: u64,
-//     pub start_time: i64,
-//     pub end_time: i64,
-//     pub participants: u32,
-//     pub pool_amount: u64,
-//     pub winning_tax: u8,
-//     pub winners: Vec<Pubkey>,
-//     pub prize_amount: Vec<u64>,
-// }
-
-
-// #[derive(AnchorSerialize, AnchorDeserialize, Eq, PartialEq, Clone, Copy, Debug)]
-// pub enum LotteryState {
-//     NotStarted,
-//     InProgress,
-//     Ended,
-// }
-
-// impl Default for LotteryState {
-//     fn default() -> Self {
-//         LotteryState::NotStarted
-//     }
-// }
+#[account]
+pub struct DepositeTicker {
+    pub depositer: Pubkey,
+    pub time_frame: u64,
+    pub spots: u8,
+    pub amount: u64
+}
 
 
 

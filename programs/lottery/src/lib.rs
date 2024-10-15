@@ -47,7 +47,7 @@ pub mod lottery {
 
     pub fn add_referral_user(ctx: Context<AddReferralUser>) -> Result<()> {
       msg!("add referral user {}", "id");
-      referral::add_referral_user(ctx)
+      referral::add_referral(ctx)
     }
 
     pub fn get_user_ticket(ctx: Context<GetUserTicket>) -> Result<bool> {

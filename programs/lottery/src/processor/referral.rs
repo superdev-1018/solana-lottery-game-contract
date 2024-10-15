@@ -55,7 +55,7 @@ pub fn setreferral(ctx: Context<SetReferralLink>, referral_link: String) -> Resu
     }
 }
 
-pub fn add_referral_user(ctx: Context<AddReferralUser>) -> Result<()> {
+pub fn add_referral(ctx: Context<AddReferralUser>) -> Result<()> {
     let lottery = &mut ctx.accounts.lottery;
     let referrer = &mut ctx.accounts.referrer;
     let referral_user = &mut ctx.accounts.referral_user;

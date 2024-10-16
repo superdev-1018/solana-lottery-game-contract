@@ -45,9 +45,9 @@ pub mod lottery {
       referral::setreferral(ctx, referral_link)
     }
 
-    pub fn add_referral_user(ctx: Context<AddReferralUser>) -> Result<()> {
-      msg!("add referral user {}", "id");
-      referral::add_referral(ctx)
+    pub fn buy_ticket_with_referral(ctx: Context<BuyTicketWithReferral>, count: u8) -> Result<()> {
+      msg!("buy ticket with referral user {}", "id");
+      referral::buy_with_referral(ctx, count)
     }
 
     pub fn get_user_ticket(ctx: Context<GetUserTicket>) -> Result<bool> {

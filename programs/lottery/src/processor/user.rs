@@ -53,40 +53,10 @@ pub fn getticket(ctx: Context<BuyTicket>, count:u8) -> Result<()> {
 
     let lottery = &mut ctx.accounts.lottery;
     let buyer = &ctx.accounts.buyer;
-
-    // let lottery: &mut Lottery = lotterys.iter_mut().find(|lottery| lottery.time_frame == lottery_type).ok_or(ContractError::LotteryNotFound)?;
-    // require!(
-    //     lottery.state == LotteryState::InProgress && lottery.end_time > timestamp,
-    //     ContractError::LotteryEnded
-    // );
-
-    // require!((lottery.state) !=2, ContractError::LotteryEnded);
-    // let max_tickets: usize = lottery.max_ticket.try_into().unwrap();
-    // require!(
-    //     !lottery.participants.contains(buyer.key),
-    //     ContractError::AlreadyParticipated
-    // );
-
-    // require!(
-    //     lottery.participants.len() + 1 <= max_tickets,
-    //     ContractError::LotteryAlreadyFulled
-    // );
-
     let user =&mut ctx.accounts.user;
-    // let real_count = lottery.real_count;
-
-    // if user.id == buyer.key() && user.spot[0] > 0 && lottery.time_frame == 1{
-    //     lottery.participants[real_count as usize] = *buyer.key;
-        
-    //     return Ok(());
-    // }
-
     let transfer_amount = (lottery.ticket_price as u64) * (count as u64) * 1_000_000_000u64; 
-    msg!("transfer token amount {}", transfer_amount);
-    // let bump = ctx.bumps.global_account;
-    // let seeds = &[CONFIG_TAG.as_ref(), &[bump]];
-    // let signer = &[&seeds[..]];
 
+    msg!("transfer token amount {}", transfer_amount);
     msg!("Buyer token account owner: {:?}", ctx.accounts.buyer_token_account.owner);
     msg!("Authority for transfer: {:?}", ctx.accounts.buyer.key);
 
@@ -107,9 +77,7 @@ pub fn getticket(ctx: Context<BuyTicket>, count:u8) -> Result<()> {
 
     let _ = anchor_spl::token::transfer(CpiContext::new(cpi_program, transfer_instruction), transfer_amount)?;
 
-    // lottery.participants[real_count as usize] = *buyer.key;
     lottery.real_pool_amount += transfer_amount; 
-
     user.id = buyer.key();
     let lottery_timeframe = lottery.time_frame;
 

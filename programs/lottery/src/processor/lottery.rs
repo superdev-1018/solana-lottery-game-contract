@@ -91,7 +91,7 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
     let lottery =&mut ctx.accounts.lottery;
     let participants = lottery.participants.len();
     let max_tickets: usize = lottery.max_ticket.try_into().unwrap();
-    let is_in_progress = lottery.state == 0;
+    let is_in_progress = lottery.state == 1;
 
     require!(is_in_progress, ContractError::LotteryNotStarted);
     require!(participants > 3, ContractError::NotEnoughParticipants);

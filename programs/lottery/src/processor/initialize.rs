@@ -16,7 +16,7 @@ pub struct Initialize<'info> {
     pub global_account: Box<Account<'info, GlobalAccount>>,
 
     #[account(
-        init_if_needed,
+        init,
         payer = initializer,
         seeds = [LOTTERY_PDAKEY_INFO],
         bump,
@@ -25,7 +25,7 @@ pub struct Initialize<'info> {
     pub lottery_pdakey_info: Box<Account<'info, LotteryPdaInfo>>,
 
     #[account(
-        init_if_needed,
+        init,
         payer= initializer, 
         seeds=[WINNER_TICKER],
         bump,
@@ -34,7 +34,7 @@ pub struct Initialize<'info> {
     pub winner_ticker: Box<Account<'info, WinnerTicker>>,
 
     #[account(
-        init_if_needed, 
+        init, 
         payer= initializer, 
         seeds=[DEPOSITE_TICKER], 
         bump, 
@@ -42,11 +42,11 @@ pub struct Initialize<'info> {
     )]
     pub deposite_ticker: Box<Account<'info, DepositeTicker>>,
 
-    #[account(mut)]
-    pub pool_token_account: Account<'info, TokenAccount>,
+    // #[account(mut)]
+    // pub pool_token_account: Account<'info, TokenAccount>,
 
-    #[account(mut)]
-    pub withdraw_token_account: Account<'info, TokenAccount>,
+    // #[account(mut)]
+    // pub withdraw_token_account: Account<'info, TokenAccount>,
 
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
@@ -70,9 +70,16 @@ pub fn init(ctx: Context<Initialize>) -> Result<()> {
 
     ctx.accounts.global_account.initializer = ctx.accounts.initializer.key();
     ctx.accounts.global_account.is_initialized = 1;
-    ctx.accounts.global_account.pool_toke_account = ctx.accounts.pool_token_account.key();
-    ctx.accounts.global_account.withdraw_token_account = ctx.accounts.withdraw_token_account.key();
+    // ctx.accounts.global_account.pool_toke_account = ctx.accounts.pool_token_account.key();
+    // ctx.accounts.global_account.withdraw_token_account = ctx.accounts.withdraw_token_account.key();
     ctx.accounts.lottery_pdakey_info.count = 0;
     ctx.accounts.lottery_pdakey_info.rounds = [0;10];
+    ctx.accounts.winner_ticker.winner = Pubkey::default();
+    ctx.accounts.winner_ticker.time_frame = 0;
+    ctx.accounts.winner_ticker.prize = 0;
+    ctx.accounts.deposite_ticker.depositer = Pubkey::default();
+    ctx.accounts.deposite_ticker.time_frame = 0;
+    ctx.accounts.deposite_ticker.spots = 0;
+    ctx.accounts.deposite_ticker.amount = 0;
     Ok(())
 }

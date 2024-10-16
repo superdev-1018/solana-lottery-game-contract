@@ -61,17 +61,16 @@ pub struct JoinLottery<'info> {
 
 
 
-pub fn create(ctx: Context<CreateLottery>, id:u8, time_frame_index:u8, time_frame:u64, ticket_price: u8, max_ticket:u64, dev_fee: u32) -> Result<()> {
+pub fn create(ctx: Context<CreateLottery>, id:u8, time_frame_index:u8, time_frame:u64, ticket_price: u8, max_ticket:u64, dev_fee: u32, start_time:i64) -> Result<()> {
     msg!("entrypoint of {}", "create");
     let lottery =&mut ctx.accounts.lottery;
-    let current_time = Clock::get().unwrap().unix_timestamp;
     lottery.id = id;
     lottery.time_frame = time_frame;
     lottery.ticket_price = ticket_price;
     lottery.max_ticket = max_ticket;
     lottery.dev_fee = dev_fee;
-    lottery.start_time = current_time;
-    lottery.end_time = current_time + time_frame as i64;
+    lottery.start_time = start_time;
+    lottery.end_time = start_time + (time_frame * 3600) as i64;
     lottery.state = 0;
     lottery.real_pool_amount = 0;
     lottery.round +=1;

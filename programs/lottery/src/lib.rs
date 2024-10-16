@@ -20,9 +20,9 @@ pub mod lottery {
        initialize::init(ctx)
     }
 
-    pub fn create_lottery(ctx: Context<CreateLottery>, id:u8, time_frame_index:u8, time_frame:u64, ticket_price: u8, max_ticket:u64, dev_fee: u32) -> Result<()> {
+    pub fn create_lottery(ctx: Context<CreateLottery>, id:u8, time_frame_index:u8, time_frame:u64, ticket_price: u8, max_ticket:u64, dev_fee: u32, start_time: i64) -> Result<()> {
       msg!("create lottery {}", time_frame_index);
-      lottery::create(ctx, id, time_frame_index, time_frame, ticket_price, max_ticket, dev_fee)
+      lottery::create(ctx, id, time_frame_index, time_frame, ticket_price, max_ticket, dev_fee, start_time)
     }
 
     pub fn buy_ticket(ctx: Context<BuyTicket>, count:u8) -> Result<()> {

@@ -90,12 +90,10 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
     let lottery =&mut ctx.accounts.lottery;
     let participants = lottery.participants.len();
     let max_tickets: usize = lottery.max_ticket.try_into().unwrap();
-    let is_in_progress = lottery.state == 1;
+    let is_in_progress = lottery.state == 0;
 
-    require!(is_in_progress, ContractError::LotteryNotStarted);
+    require!(is_in_progress, ContractError::LotteryAlreadyEnded);
     require!(participants > 3, ContractError::NotEnoughParticipants);
-    // require!(lottery.winner.len() == 0, ContractError::LotteryAlreadyEnded);
-    require!(!lottery.participants.contains(ctx.accounts.system_program.key), ContractError::LotteryNotStarted);
 
     let mut unique_numbers = HashSet::new();
     let current_time: u128 = Clock::get().unwrap().unix_timestamp as u128;
@@ -138,7 +136,8 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
     msg!("winner list {}, {}, {}", winner1, winner2, winner3);
     // Calculate tax fee and update pool amount
     let lottery_pool_amount = lottery.real_pool_amount;
-    let tax_fee = lottery_pool_amount * 10 / 100;
+    let dev_fee = lottery.dev_fee;
+    let tax_fee = lottery_pool_amount * (dev_fee as u64) / 100;
     lottery.real_pool_amount -= tax_fee;
     msg!("tax fee amount is {}", tax_fee);
     // Transfer the tax fee

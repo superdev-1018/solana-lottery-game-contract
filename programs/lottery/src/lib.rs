@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("8JgYsnrp8ASKABP7hnma1j8DTaU4F31hwJoPXB96SZwL");
+declare_id!("6335gXcANhi2LHintfR456frv3KC588j7bNxEoScBSMS");
 
 pub mod constant;
 pub mod error;
@@ -59,6 +59,16 @@ pub mod lottery {
       msg!("join lottery {}", "id");
       lottery::join_to_lottery(ctx, user_spot_index)
     } 
+
+    pub fn refund_to_user (ctx: Context<ReFund>) -> Result<()> {
+      msg!("refund ticket price {}","in Notenough participant lottery");
+      refund::refund_ticket_price(ctx)
+    }
+
+    pub fn set_lottery_state (ctx: Context<SetLotteryState>) -> Result<()> {
+      msg!("set lottery state {}","in no participant lottery");
+      lottery::set_state(ctx)
+    }
 
 }
 

@@ -59,6 +59,15 @@ pub struct JoinLottery<'info> {
     pub system_program: Program<'info, System>,
 }
 
+#[derive(Accounts)]
+pub struct SetLotteryState<'info> {
+    #[account(mut)]
+    pub admin: Signer<'info>,
+
+    #[account(mut)]
+    pub lottery: Box<Account<'info, Lottery>>,
+}
+
 
 
 pub fn create(ctx: Context<CreateLottery>, id:u8, time_frame_index:u8, time_frame:u64, ticket_price: u8, max_ticket:u64, dev_fee: u32, start_time:i64) -> Result<()> {
@@ -134,6 +143,7 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
     let winner3 = winners[2];
     lottery.winner = [winner1, winner2, winner3];
     msg!("winner list {}, {}, {}", winner1, winner2, winner3);
+    msg!("lottery winner {:?}",lottery.winner);
     // Calculate tax fee and update pool amount
     let lottery_pool_amount = lottery.real_pool_amount;
     let dev_fee = lottery.dev_fee;
@@ -190,8 +200,17 @@ pub fn join_to_lottery(ctx: Context<JoinLottery>, user_spot_index:u8) -> Result<
 
     let transfer_amount = lottery.ticket_price as u64;
     lottery.participants.push(user.id);
+    msg!("real pool amount in join lottery {}, transfer_amount: {}", lottery.real_pool_amount, transfer_amount);
     lottery.real_pool_amount += transfer_amount; 
+    msg!("this is real pool amount after plus transfer amount: {}",lottery.real_pool_amount);
     user.spot[user_spot_index as usize] -= 1;
 
+    Ok(())
+}
+
+
+pub fn set_state(ctx: Context<SetLotteryState>) -> Result<()> {
+    let lottery = &mut ctx.accounts.lottery;
+    lottery.state = 1;
     Ok(())
 }

@@ -38,7 +38,7 @@ pub fn refund_ticket_price(ctx: Context<ReFund>) -> Result<()> {
         ticket_price
     )?;
 
-    lottery.state = 1;
+    lottery.state = 0;
 
     Ok(())
 }

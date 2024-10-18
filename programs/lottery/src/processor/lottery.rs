@@ -93,16 +93,14 @@ pub fn create(ctx: Context<CreateLottery>, id:u8, time_frame_index:u8, time_fram
 }
 
 
-
 pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
 
     let lottery =&mut ctx.accounts.lottery;
     let participants = lottery.participants.len();
-    let max_tickets: usize = lottery.max_ticket.try_into().unwrap();
     let is_in_progress = lottery.state == 0;
 
     require!(is_in_progress, ContractError::LotteryAlreadyEnded);
-    require!(participants > 3, ContractError::NotEnoughParticipants);
+    require!(participants >= 3, ContractError::NotEnoughParticipants);
 
     let mut unique_numbers = HashSet::new();
     let current_time: u128 = Clock::get().unwrap().unix_timestamp as u128;
@@ -163,9 +161,9 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
         tax_fee,
     )?;
 
-    let winner1_prize = lottery_pool_amount * 50/100 as u64;
-    let winner2_prize = lottery_pool_amount * 30/100 as u64;
-    let winner3_prize = lottery_pool_amount * 20/100 as u64;
+    let winner1_prize = (lottery_pool_amount - tax_fee)* 50/100 as u64;
+    let winner2_prize = (lottery_pool_amount - tax_fee) * 30/100 as u64;
+    let winner3_prize = (lottery_pool_amount - tax_fee) * 20/100 as u64;
 
     lottery.winner_prize = [winner1_prize, winner2_prize, winner3_prize];
     lottery.state = 1;

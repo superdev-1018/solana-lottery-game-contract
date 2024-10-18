@@ -7,8 +7,6 @@ use crate::MAX_PLAYERS;
 pub struct GlobalAccount {
     pub initializer: Pubkey,
     pub is_initialized: u8,
-    // pub pool_toke_account: Pubkey,
-    // pub withdraw_token_account: Pubkey
 }
 
 #[account]

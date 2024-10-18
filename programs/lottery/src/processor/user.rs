@@ -3,7 +3,6 @@ use anchor_spl::token::{Token, TokenAccount, Transfer};
 pub use crate::{account::*, constant::*, error::*};
 
 #[derive(Accounts)]
-// #[instruction(id: u8, admin_key:Pubkey)]
 pub struct BuyTicket<'info> {
     #[account(mut)]
     pub buyer: Signer<'info>,
@@ -68,12 +67,6 @@ pub fn getticket(ctx: Context<BuyTicket>, count:u8) -> Result<()> {
     };
 
     let cpi_program = ctx.accounts.token_program.to_account_info();
-
-    // let cpi_ctx = CpiContext::new_with_signer(
-    //     ctx.accounts.token_program.to_account_info(),
-    //     transfer_instruction, 
-    //      signer
-    // );
 
     let _ = anchor_spl::token::transfer(CpiContext::new(cpi_program, transfer_instruction), transfer_amount)?;
 

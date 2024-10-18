@@ -184,6 +184,9 @@ pub fn join_to_lottery(ctx: Context<JoinLottery>, user_spot_index:u8) -> Result<
     require!((lottery.state) !=1, ContractError::LotteryEnded);
     let max_tickets: usize = lottery.max_ticket.try_into().unwrap();
 
+    if lottery.participants.contains(&user.id) {
+        lottery.real_pool_amount += (lottery.ticket_price as u64) * 1_000_000_000u64;
+    }
      require!(
         !lottery.participants.contains(&user.id),
         ContractError::AlreadyParticipated
@@ -199,7 +202,7 @@ pub fn join_to_lottery(ctx: Context<JoinLottery>, user_spot_index:u8) -> Result<
     let transfer_amount = lottery.ticket_price as u64;
     lottery.participants.push(user.id);
     msg!("real pool amount in join lottery {}, transfer_amount: {}", lottery.real_pool_amount, transfer_amount);
-    lottery.real_pool_amount += transfer_amount; 
+    lottery.real_pool_amount += transfer_amount * 1_000_000_000u64; 
     msg!("this is real pool amount after plus transfer amount: {}",lottery.real_pool_amount);
     user.spot[user_spot_index as usize] -= 1;
 

@@ -5,13 +5,13 @@ seeds = false
 skip-lint = false
 
 [programs.mainnet]
-lottery = "6335gXcANhi2LHintfR456frv3KC588j7bNxEoScBSMS"
+lottery = "2mf9cAD6JoXBg2pm3sVSF2bNjXhZ3cCC51mCwVk5ANeD"
 
 [programs.devnet]
-lottery = "6335gXcANhi2LHintfR456frv3KC588j7bNxEoScBSMS"
+lottery = "2mf9cAD6JoXBg2pm3sVSF2bNjXhZ3cCC51mCwVk5ANeD"
 
 [programs.localnet]
-lottery = "6335gXcANhi2LHintfR456frv3KC588j7bNxEoScBSMS"
+lottery = "2mf9cAD6JoXBg2pm3sVSF2bNjXhZ3cCC51mCwVk5ANeD"
 
 [registry]
 url = "https://api.apr.dev"

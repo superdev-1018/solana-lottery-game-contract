@@ -172,7 +172,7 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
 
     let winner_ticker = &mut ctx.accounts.winner_ticker;
     winner_ticker.winner = winner1;
-    winner_ticker.prize = lottery.real_pool_amount * 50;
+    winner_ticker.prize = lottery.real_pool_amount * 50/100;
     winner_ticker.time_frame = lottery.time_frame;
 
     Ok(())

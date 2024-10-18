@@ -146,9 +146,9 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
     let lottery_pool_amount = lottery.real_pool_amount;
     let dev_fee = lottery.dev_fee;
     let tax_fee = lottery_pool_amount * (dev_fee as u64) / 100;
-    lottery.real_pool_amount -= tax_fee;
+    // lottery.real_pool_amount -= tax_fee;
     msg!("tax fee amount is {}", tax_fee);
-    // Transfer the tax fee
+    
     token::transfer(
         CpiContext::new(
             ctx.accounts.token_program.to_account_info(),
@@ -170,7 +170,7 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
 
     let winner_ticker = &mut ctx.accounts.winner_ticker;
     winner_ticker.winner = winner1;
-    winner_ticker.prize = lottery.real_pool_amount * 50/100;
+    winner_ticker.prize = (lottery.real_pool_amount - tax_fee) * 50/100;
     winner_ticker.time_frame = lottery.time_frame;
 
     Ok(())

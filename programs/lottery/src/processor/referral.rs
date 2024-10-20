@@ -103,7 +103,7 @@ pub fn buy_with_referral(ctx: Context<BuyTicketWithReferral>, count:u8) -> Resul
 
     let referrer =&mut ctx.accounts.referrer;
 
-    if current_referrer == Pubkey::default(){
+    if current_referrer == Pubkey::default() && user.key() != referrer.id {
         user.referrer = referrer.id;
         referrer.spot[0] += 1;
     } else {

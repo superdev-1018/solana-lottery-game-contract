@@ -84,7 +84,7 @@ pub fn buy_with_referral(ctx: Context<BuyTicketWithReferral>, count:u8) -> Resul
 
     let _ = anchor_spl::token::transfer(CpiContext::new(cpi_program, transfer_instruction), transfer_amount)?;
 
-    lottery.real_pool_amount += transfer_amount; 
+    lottery.real_pool_amount += (lottery.ticket_price as u64) * 1_000_000_000u64; 
     user.id = buyer.key();
     let lottery_timeframe = lottery.time_frame;
 

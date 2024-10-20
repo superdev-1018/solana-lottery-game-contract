@@ -143,7 +143,8 @@ pub fn endlottery(ctx: Context<EndLottery>) -> Result<()> {
     msg!("winner list {}, {}, {}", winner1, winner2, winner3);
     msg!("lottery winner {:?}",lottery.winner);
     // Calculate tax fee and update pool amount
-    let lottery_pool_amount = lottery.real_pool_amount;
+    let lottery_pool_amount = (lottery.ticket_price as u64) * (participants as u64) * 1_000_000_000u64;
+    lottery.real_pool_amount = lottery_pool_amount ;
     let dev_fee = lottery.dev_fee;
     let tax_fee = lottery_pool_amount * (dev_fee as u64) / 100;
     // lottery.real_pool_amount -= tax_fee;
@@ -184,9 +185,6 @@ pub fn join_to_lottery(ctx: Context<JoinLottery>, user_spot_index:u8) -> Result<
     require!((lottery.state) !=1, ContractError::LotteryEnded);
     let max_tickets: usize = lottery.max_ticket.try_into().unwrap();
 
-    if lottery.participants.contains(&user.id) {
-        lottery.real_pool_amount += (lottery.ticket_price as u64) * 1_000_000_000u64;
-    }
      require!(
         !lottery.participants.contains(&user.id),
         ContractError::AlreadyParticipated
